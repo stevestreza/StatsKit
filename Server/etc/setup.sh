@@ -1,8 +1,15 @@
 #! /bin/bash
 #  Must be run as root!
 
-# Install compilers and downloaders
-apt-get install --assume-yes build-essential curl;
+exec &> /root/stackscript.log
+
+apt-get upgrade;
+apt-get update;
+
+# Install compilers and some other utilities
+apt-get install --assume-yes build-essential;
+apt-get install --assume-yes curl;
+apt-get install --assume-yes libssl-dev;
 
 # Add repo manager
 apt-get install --assume-yes python-software-properties;

@@ -8,7 +8,7 @@ var getDatabaseURL = function(){
 	var port     = config.postgresql.port;
 	var database = config.postgresql.databaseName;
 	var authString = (username && password) ? ("" + username + ":" + password + "@") : "";
-	return "tcp://" + authString + host + (port ? (":" + port) : "" + "/" + database;
+	return "tcp://" + authString + host + (port ? (":" + port) : "") + "/" + database;
 }
 
 exports.postgresConnection = function(cb){
