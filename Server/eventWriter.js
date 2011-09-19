@@ -1,6 +1,6 @@
 var util = require('util');
 var redis = require('./redis');
-var postgres = require('./postgres');
+var postgres = require('./postgresql');
 
 var eventWriter = exports;
 
@@ -80,9 +80,10 @@ exports.writeEvent = function(event, cb){
 	var eventJSON = event;
 	var sql = sqlStatementForEvent(eventJSON) + "\n";
 
-	eventWriter.getDatabase(function(err, db){
-		if(err){
-			cb(err);
+	eventWriter.getDatabase(function(db){
+		if(!db){
+        	console.log("Could not connect to postgres");
+			cb("Could not connect to postgres");
 			return;
 		}
 		
