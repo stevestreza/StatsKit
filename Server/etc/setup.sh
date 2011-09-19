@@ -83,13 +83,13 @@ pushd ~analytics/packages
 		
 		# Server: Install the server upstart scripts
 		pushd etc/upstart;
-			SERVER_PATH_REGEX="s/\-\-\-SERVERPATH\-\-\-/$SERVER_PATH\/etc/se/g";
+			SERVER_PATH_REGEX="s|\-\-\-SERVERPATH\-\-\-|$SERVER_PATH\/etc|g";
 			
-			sed -i.orig analyticsServer.conf;
-			sudo ln -s $PWD/analyticsServer.conf /etc/init/analyticsServer.conf;
+			sed -i.orig $SERVER_PATH_REGEX analyticsServer.conf;
+			cp analyticsServer.conf /etc/init/analyticsServer.conf;
 			
-			sed -i.orig analyticsWriter.conf;
-			sudo ln -s $PWD/analyticsWriter.conf /etc/init/analyticsWriter.conf;
+			sed -i.orig $SERVER_PATH_REGEX analyticsWriter.conf;
+			cp analyticsWriter.conf /etc/init/analyticsWriter.conf;
 		popd;
 		
 		# Finish installing the server
@@ -101,7 +101,7 @@ popd;
 chown -R analytics:analytics $SERVER_PATH;
 
 start analyticsServer;
-start analyticsWorker;
+start analyticsWriter;
 
 # Cleanup
 echo; echo; echo "---"; echo;
