@@ -5,8 +5,8 @@ exports.config = {
 	postgresql: {
 		host: "localhost",
 		port: 5432,
-		username: "",
-		password: ""
+		username: "analytics",
+		password: "---PASSWORD---"
 	},
 	redis: {
 		host: "localhost",

@@ -1,8 +1,22 @@
 #! /bin/bash
 #  Must be run as root!
 
+# - Random Password Generator (source: http://legroom.net/2010/05/06/bash-random-password-generator)
+#   Generate a random password and stores it in
+#   $1 = number of characters; defaults to 32
+function createPostgreSQLPassword() {
+    POSTGRES_PASSWORD=`cat /dev/urandom | LC_CTYPE=C tr -cd "[:alnum:]" | head -c ${1:-32}`
+}
+
+# - Execution Script
+
+# Redirect output to this log file, comment out if you don't want log files
 exec &> /root/stackscript.log
 
+# pre-flight, generates a password for Postgres
+createPostgreSQLPassword 16;
+
+# update the system, this is needed for certain Ubuntus which won't load build-essential on Linode
 apt-get upgrade;
 apt-get update;
 
@@ -54,6 +68,26 @@ npm install;
 su postgres -s /usr/bin/perl -- /usr/bin/psql -f etc/load.sql
 popd;
 
+# Create the load.sql file
+pushd config;
+POSTGRES_PASSWORD_REGEX="s/\-\-\-PASSWORD\-\-\-/$POSTGRES_PASSWORD/g"
+cp config.js.example config.js;
+sed -i ".orig" $POSTGRES_PASSWORD_REGEX config.js;
+rm config.js.orig;
+popd;
+
+pushd etc;
+sed -i ".orig" $POSTGRES_PASSWORD_REGEX load.sql;
+rm load.sql.orig;
+popd;
+
 # Finish setting up packages
 chown -R analytics:analytics .;
 popd;
+
+# Cleanup
+echo; echo; echo "---"; echo;
+echo "    StatsKit server setup complete."; echo;
+echo "  - PostgreSQL Username: analytics";
+echo "  - PostgreSQL Password:" $POSTGRES_PASSWORD;
+echo; echo "---";

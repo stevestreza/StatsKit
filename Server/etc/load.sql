@@ -1,4 +1,4 @@
-CREATE USER analytics WITH PASSWORD 'y3DPKkWUBPqojZ8L';
+CREATE USER analytics WITH PASSWORD '---PASSWORD---';
 
 CREATE TYPE "public"."platform" AS ENUM (
 	'Mac',
